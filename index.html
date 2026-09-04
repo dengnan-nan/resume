@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1,user-scalable=no">
     <title>个人作品集｜2026届毕业生</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -28,6 +28,24 @@
     <style>
         html {
             scroll-behavior: smooth;
+        }
+
+        /* ========== 新增：手机竖屏横屏提示遮罩 ========== */
+        .rotate-tip{
+            position:fixed;
+            z-index:9999;
+            top:0;left:0;
+            width:100vw;height:100vh;
+            background:#000;
+            color:#fff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+            font-size:18px;
+        }
+        @media (orientation:landscape){
+            .rotate-tip{display:none !important;}
         }
 
         .nav-item {
@@ -69,7 +87,6 @@
             box-shadow: 4px 6px 14px rgba(0,0,0,0.12);
             border: 8px solid #fff;
             border-radius: 20px;
-            transform: rotate(var(--rotate, 1deg));
             overflow:hidden;
         }
         .photo-card img{
@@ -245,6 +262,10 @@
     </style>
 </head>
 <body class="font-sans bg-cream text-slate-800 overflow-x-hidden">
+<!-- ========= 新增：竖屏旋转提示遮罩 ========= -->
+<div class="rotate-tip">
+    <div>🔄请将手机横向使用</div>
+</div>
 
 <!-- 顶部导航栏：PPT风格浅色导航 -->
 <header class="sticky top-0 bg-paper/90 backdrop-blur-sm shadow-sm z-50 border-b border-softGray">
@@ -670,5 +691,21 @@
         updateSlide(nextIndex);
     }, 5000);
 </script>
+
+<!-- ========= 横屏检测JS逻辑 ========= -->
+<script>
+function checkOrient(){
+    const tip = document.querySelector('.rotate-tip');
+    const isLandscape = window.innerWidth > window.innerHeight;
+    if(isLandscape){
+        tip.style.display = 'none';
+    }else{
+        tip.style.display = 'flex';
+    }
+}
+window.addEventListener('resize',checkOrient);
+window.addEventListener('load',checkOrient);
+</script>
+
 </body>
 </html>
