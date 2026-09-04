@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集｜2026届毕业生</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F7F3E8',
+                        paper: '#FCFAF4',
+                        accentOrange: '#D47B59',
+                        deepGreen: '#3A4A3C',
+                        softGray: '#E8E4DA'
+                    },
+                    fontFamily: {
+                        song: ['"Noto Serif SC"', 'serif'],
+                        sans: ['"Noto Sans SC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .nav-item {
+            padding: 0.5rem 1rem;
+            transition: color 0.2s;
+        }
+        .nav-item:hover {
+            color: #D47B59;
+        }
+
+        section {
+            padding: 4rem 1.5rem;
+        }
+
+        /* ========= 滚动动画：进出视口重置效果 ========= */
+        .scroll-animate {
+            opacity: 0;
+            transition: all 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .scroll-animate.fade-up {
+            transform: translateY(60px);
+        }
+        .scroll-animate.slide-left {
+            transform: translateX(-80px);
+        }
+        .scroll-animate.slide-right {
+            transform: translateX(80px);
+        }
+        .scroll-animate.pop-scale {
+            transform: scale(0.88);
+        }
+        .scroll-animate.active {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+
+        /* PPT样式：拍立得照片卡片，带旋转、白边阴影 */
+        .photo-card {
+            box-shadow: 4px 6px 14px rgba(0,0,0,0.12);
+            border: 8px solid #fff;
+            border-radius: 20px;
+            transform: rotate(var(--rotate, 1deg));
+            overflow:hidden;
+        }
+        .photo-card img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+        .sticker-tag {
+            background: #fff;
+            box-shadow: 2px 3px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 10px 16px;
+            transform: rotate(var(--tag-rotate, -2deg));
+        }
+
+        /* ========= 首页窄Header + 灰色蒙版轮播 ========= */
+        .home-slider {
+            position: relative;
+            width: 100%;
+            height: 95vh;
+            overflow: hidden;
+        }
+        .home-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .home-slide.active {
+            opacity: 1;
+        }
+        .home-slide::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.45);
+        }
+        .home-slide-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .home-slider-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .home-slider-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .home-slider-arrow.prev {
+            left: 24px;
+        }
+        .home-slider-arrow.next {
+            right: 24px;
+        }
+        .home-slider-dots {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            gap: 10px;
+        }
+        .home-slider-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .home-slider-dot.active {
+            background-color: white;
+        }
+
+        /* ✅修复项目卡片：内部向下展开，不会被遮挡 */
+        .project-card-wrap {
+            position: relative;
+        }
+        .project-card-detail {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.45s ease;
+            background-color:#fff;
+            margin-top:1rem;
+        }
+        .project-card-wrap:hover .project-card-detail{
+            max-height:800px;
+            opacity:1;
+            border:2px solid var(--softGray,#E8E4DA);
+            border-radius:0.75rem;
+            padding:1rem;
+        }
+
+        /* ======================新增：弧形倾斜证书画廊样式====================== */
+        .arc-gallery{
+            margin-top:4rem;
+            padding:2rem 0;
+        }
+        .arc-gallery-container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-wrap:nowrap;
+            gap:14px;
+            perspective:1200px;
+        }
+        .cert-card{
+            position:relative;
+            width:140px;
+            flex-shrink:0;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            transform: rotate(var(--rotate-deg));
+            transform-origin:center bottom;
+        }
+        .cert-card.landscape{
+            height:160px;
+            width:220px;
+        }
+        .cert-card img{
+            width:100%;
+            height:100%;
+            object-fit:cover;
+        }
+        .cert-card:hover{
+            transform: translateY(-22px) scale(1.08) rotate(0deg);
+            z-index:10;
+            box-shadow:0 16px 30px rgba(0,0,0,0.25);
+        }
+        .cert-card .cert-mask{
+            position:absolute;
+            inset:0;
+            background:rgba(0,0,0,0.65);
+            color:#fff;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            padding:8px;
+            font-size:14px;
+            opacity:0;
+            transition:0.3s;
+        }
+        .cert-card:hover .cert-mask{
+            opacity:1;
+        }
+    </style>
+</head>
+<body class="font-sans bg-cream text-slate-800 overflow-x-hidden">
+
+<!-- 顶部导航栏：PPT风格浅色导航 -->
+<header class="sticky top-0 bg-paper/90 backdrop-blur-sm shadow-sm z-50 border-b border-softGray">
+    <div class="max-w-7xl mx-auto">
+        <nav class="flex flex-wrap justify-center items-center py-2 gap-1">
+            <a href="#home" class="nav-item font-song font-bold text-deepGreen">个人作品集</a>
+            <a href="#about" class="nav-item text-slate-700">关于我</a>
+            <a href="#study" class="nav-item text-slate-700">我的学习坐标</a>
+            <a href="#project" class="nav-item text-slate-700">项目作品集</a>
+            <a href="#award" class="nav-item text-slate-700">荣誉奖项</a>
+            <a href="#life" class="nav-item text-slate-700">生活切片</a>
+            <a href="#contact" class="nav-item text-slate-700">联系我</a>
+        </nav>
+    </div>
+</header>
+
+<!-- 首页轮播 -->
+<section id="home" class="p-0">
+    <div class="home-slider">
+        <div class="home-slide active" style="background-image: url('./封面.png');">
+            <div class="home-slide-content">
+                <h1 class="scroll-animate pop-scale text-4xl md:text-6xl font-song font-bold mb-4">个人作品集</h1>
+                <p class="scroll-animate fade-up text-xl md:text-2xl">一名2026届毕业生</p>
+            </div>
+        </div>
+        <div class="home-slide" style="background-image: url('./横屏海报制作 (1).png');">
+            <div class="home-slide-content">
+                <h1 class="scroll-animate pop-scale text-4xl md:text-6xl font-song font-bold mb-4">湖南娄底</h1>
+                <p class="scroll-animate fade-up text-xl md:text-2xl">做不一样的自己 解密未知人生</p>
+            </div>
+        </div>
+        <div class="home-slide" style="background-image: url('./图片风格迁移（旅游自然主题） (1).png');">
+            <div class="home-slide-content">
+                <h1 class="scroll-animate pop-scale text-4xl md:text-6xl font-song font-bold mb-4">爱旅行 爱自然</h1>
+                <p class="scroll-animate fade-up text-xl md:text-2xl"></p>
+            </div>
+        </div>
+        <button class="home-slider-arrow prev" id="sliderPrev">&#8249;</button>
+        <button class="home-slider-arrow next" id="sliderNext">&#8250;</button>
+        <div class="home-slider-dots">
+            <span class="home-slider-dot active" data-index="0"></span>
+            <span class="home-slider-dot" data-index="1"></span>
+            <span class="home-slider-dot" data-index="2"></span>
+        </div>
+    </div>
+</section>
+
+<!-- 关于我（PPT首页弧形人像+贴纸标签） -->
+<section id="about" class="bg-paper overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-12 gap-8 items-center">
+            <!-- 左侧文字 -->
+            <div class="md:col-span-7 scroll-animate slide-left">
+                <div class="text-xs text-deepGreen mb-2">AI DEVELOPER · 2026</div>
+                <h2 class="font-song text-4xl md:text-5xl leading-tight mb-6">
+                    你好，我是邓楠<br>
+                    <span>爱思考，也把想法<br><span class="relative">真正做出来。<span class="absolute -bottom-1 left-0 w-full h-2 bg-yellow-300/50 -z-10"></span></span>
+                </h2>
+                <div class="space-y-3 mt-6 text-slate-700">
+                    <p>20岁 / 双鱼座 / I人</p>
+                    <p>人工智能技术应用专业 / 专科</p>
+                    <p>求职意向：前端设计 / 后端开发</p>
+                    <p>喜欢把想法落地成有用的东西</p>
+                </div>
+                <blockquote class="border-l-2 border-accentOrange pl-4 my-6 text-slate-600 italic">
+                    “我不是一开始就找到了方向，但每一步都没有白走。”
+                </blockquote>
+                <div class="sticker-tag w-fit mt-6" style="--tag-rotate:1deg">
+                    <span class="text-xs text-accentOrange">SKILLS EXPERIENCE</span>
+                    <div class="mt-1">Python · Web · 深度学习 · 数据可视化</div>
+                </div>
+                <!-- 灰色占位编辑框 -->
+                <div class="bg-cream rounded-xl p-5 mt-8 border border-softGray min-h-[180px]">
+                    <div class="text-slate-500">
+                        <p>在校期间注重综合素质发展，主动接触科普文化领域内容，保持求知探索的学习态度。</p>
+                        <br>
+                        <p>心态积极开朗，乐于在各类实践中挑战自我、汲取经验，始终保持持续向上的成长心态，在实践中完成自我迭代，努力成为更加优秀的自己。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 右侧弧形圆角拍立得照片 -->
+            <div class="md:col-span-5 scroll-animate pop-scale relative">
+                <div class="photo-card aspect-[4/5]" style="--rotate:1.2deg">
+                    <img src="./2.jpg" alt="个人照片">
+                </div>
+                <div class="sticker-tag absolute -bottom-3 -left-4" style="--tag-rotate:-3deg">
+                    <div class="text-xs">下一站</div>
+                    <div>继续把难题做成好产品</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PPT页面：我的学习坐标，双卡片布局 -->
+<section id="study" class="bg-cream">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-14 scroll-animate fade-up">
+            <div class="text-xs tracking-widest text-slate-500">LEARNING COORDINATES</div>
+            <h2 class="font-song text-4xl mt-2">我的学习坐标</h2>
+            <p class="max-w-3xl mx-auto mt-4 text-slate-600">
+                在校园中夯实技术基础，从编程、算法到项目实战，建立属于自己的技术坐标系。
+            </p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- 学习卡片1 -->
+            <div class="scroll-animate pop-scale bg-paper rounded-2xl overflow-hidden shadow-md border border-softGray">
+                <div class="aspect-[16/9] bg-slate-200 flex items-center justify-center text-slate-400">
+                    <img src="img_2.png">
+                </div>
+                <div class="p-6">
+                    <div class="flex gap-2">
+                        <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded">专科</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">已毕业</span>
+                    </div>
+                    <h3 class="font-song text-2xl mt-3">人工智能技术应用</h3>
+                    <div class="text-sm text-slate-500 mt-1">湖南工程职业技术学院</div>
+                    <div class="mt-3 text-sm text-slate-600">系统学习Python、深度学习、Web开发，参与多项科创竞赛与真实项目，把理论落地实践。</div>
+                </div>
+            </div>
+            <!-- 学习卡片2 -->
+            <div class="scroll-animate pop-scale bg-paper rounded-2xl overflow-hidden shadow-md border border-softGray" style="transition-delay:120ms">
+                <div class="aspect-[16/9] bg-slate-200 flex items-center justify-center text-slate-400">
+                    <img src="3.jpg">
+                </div>
+                <div class="p-6">
+                    <div class="flex gap-2">
+                        <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded">实践积累</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs px-2 py-1 rounded">持续深耕</span>
+                    </div>
+                    <h3 class="font-song text-2xl mt-3">计算机与AI项目实战</h3>
+                    <div class="text-sm text-slate-500 mt-1">多方向技术项目沉淀</div>
+                    <div class="mt-3 text-sm text-slate-600">覆盖爬虫数据分析、大模型应用、计算机视觉、前端网页开发，完整经历从需求到交付全流程。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 项目作品集板块（全部保留你的原有项目，换复古卡片风格） ========== -->
+<section id="project" class="bg-paper">
+    <div class="max-w-7xl mx-auto px-6">
+        <h2 class="scroll-animate fade-up font-song text-3xl font-bold text-center mb-12 text-deepGreen">三载时光，我的创造与实践</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            <!--项目1：科创商业落地｜植保无人机管控平台 -->
+            <div class="scroll-animate slide-left project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+                <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
+                    <img src="项目img/img_2.png" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-song text-xl font-bold text-deepGreen">植保无人机全链路可视化管控平台</h4>
+                <p class="text-slate-600 mt-2">科创商业落地项目｜国家级科创赛事银奖</p>
+                <p class="text-sm text-accentOrange mt-2"></p>
+                <div class="project-card-detail">
+                    <h5 class="font-bold text-deepGreen">项目简介</h5>
+                    <p class="text-sm mt-1 text-slate-600">面向规模化智慧农田作业场景，配套云端一体化数字管控后台，完成整套管控大屏UI、数据可视化、三维可视化设计；负责路演PPT全案策划，项目斩获国赛银奖，产出4项专利受理。</p>
+                    <div class="bg-cream p-3 mt-3 rounded-lg">
+                        <img src="项目img/img_1.png">
+                    </div>
+                </div>
+            </div>
+
+            <!--项目2：职点迷津｜大模型Agent应用 -->
+            <div class="scroll-animate pop-scale project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+                <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
+                    <img src="项目img/img_3.png" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-song text-xl font-bold text-deepGreen">职点迷津 AI大模型Agent创新应用</h4>
+                <p class="text-slate-600 mt-2">AI智能职业服务平台</p>
+                <p class="text-sm text-accentOrange mt-2"></p>
+                <div class="project-card-detail">
+                    <h5 class="font-bold text-deepGreen">项目简介</h5>
+                    <p class="text-sm mt-1 text-slate-600">后端Python+Django，接入大模型API实现Agent对话，实现职业规划、简历优化；独立完成前端视觉交互，参与后端对接，完成UI设计到AI交互落地全流程。</p>
+                    <div class="bg-cream p-3 mt-3 rounded-lg">
+                        <img src="项目img/img_4.png">
+                    </div>
+                </div>
+            </div>
+
+            <!--项目3：ResNet人脸情绪识别 -->
+            <div class="scroll-animate slide-right project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+                <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
+                    <img src="项目img/img_5.png" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-song text-xl font-bold text-deepGreen">ResNet人脸情绪识别系统</h4>
+                <p class="text-slate-600 mt-2">深度学习七分类项目</p>
+                <p class="text-sm text-accentOrange mt-2"></p>
+                <div class="project-card-detail">
+                    <h5 class="font-bold text-deepGreen">项目简介</h5>
+                    <p class="text-sm mt-1 text-slate-600">Pytorch搭建ResNet卷积神经网络，实现视频流人脸情绪七分类；完成数据集处理、模型训练、评估指标可视化、演示界面开发。</p>
+                    <div class="bg-cream p-3 mt-3 rounded-lg">
+                        <img src="项目img/img_6.png">
+                    </div>
+                </div>
+            </div>
+
+            <!--项目4：房价爬虫可视化 -->
+            <div class="scroll-animate slide-left project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+                <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
+                    <img src="项目img/img_8.png" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-song text-xl font-bold text-deepGreen">全国房价数据采集与可视化</h4>
+                <p class="text-slate-600 mt-2">Python爬虫+MySQL数据分析项目</p>
+                <p class="text-sm text-accentOrange mt-2"></p>
+                <div class="project-card-detail">
+                    <h5 class="font-bold text-deepGreen">项目简介</h5>
+                    <p class="text-sm mt-1 text-slate-600">爬虫抓取多城市房价时序数据，入库MySQL，完成数据清洗，制作地图、折线、玫瑰图多维度可视化，完成采集‑存储‑处理‑展示闭环。</p>
+                    <div class="bg-cream p-3 mt-3 rounded-lg">
+                        <img src="项目img/img_7.png">
+                    </div>
+                </div>
+            </div>
+
+            <!--项目5：SVM黑色星期五消费预测 -->
+            <div class="scroll-animate pop-scale project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+                <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
+                    <img src="项目img/img_11.png" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-song text-xl font-bold text-deepGreen">SVM黑色星期五用户消费预测</h4>
+                <p class="text-slate-600 mt-2">机器学习多模型对比实验</p>
+                <p class="text-sm text-accentOrange mt-2"></p>
+                <div class="project-card-detail">
+                    <h5 class="font-bold text-deepGreen">项目简介</h5>
+                    <p class="text-sm mt-1 text-slate-600">基于Scikit‑learn，完成数据集清洗特征工程，对比多组核函数SVM模型，评估模型R2指标，产出完整分析报告。</p>
+                    <div class="bg-cream p-3 mt-3 rounded-lg">
+                        <img src="项目img/img_10.png">
+                    </div>
+                </div>
+            </div>
+
+            <!--项目6：人工智能之智慧语音｜博物馆数字人讲解 -->
+            <div class="scroll-animate slide-right project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+                <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
+                    <img src="项目img/img_12.png" alt="智慧语音博物馆数字人" class="w-full h-full object-cover">
+                </div>
+                <h4 class="font-song text-xl font-bold text-deepGreen">人工智能之智慧语音｜博物馆数字人讲解</h4>
+                <p class="text-slate-600 mt-2">AI智慧语音交互｜文博科普落地应用</p>
+                <p class="text-sm text-accentOrange mt-2"></p>
+                <div class="project-card-detail">
+                    <h5 class="font-bold text-deepGreen">项目简介</h5>
+                    <p class="text-sm mt-1 text-slate-600">聚焦人工智能在社会文博领域的实际应用，设计博物馆数字人讲解演示方案。制作《历史的声音》主题演示PPT，结合智慧语音技术，实现数字人对历史文物、古代历史故事进行科普解说，让博物馆展品“开口说话”，赋能传统文化数字化传播。</p>
+                    <div class="bg-cream p-3 mt-3 rounded-lg">
+                        <img src="项目img/13.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 精选奖项板块 ========== -->
+<section id="award" class="bg-cream">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="scroll-animate fade-up font-song text-3xl font-bold text-center mb-12 text-deepGreen">流水滔滔，自有成长回响</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="scroll-animate slide-left bg-paper p-6 rounded-xl shadow-sm border border-softGray">
+                <h4 class="font-song font-bold text-lg text-deepGreen">国家奖学金</h4>
+                <p class="text-slate-600 mt-1">2024‑2025学年</p>
+                <div class="bg-cream p-3 mt-4 rounded-lg">
+                    <img src="奖项img/1.jpg">
+                </div>
+            </div>
+            <div class="scroll-animate pop-scale bg-paper p-6 rounded-xl shadow-sm border border-softGray">
+                <h4 class="font-song font-bold text-lg text-deepGreen">中国国际大学生创新大赛 全国银奖</h4>
+                <p class="text-slate-600 mt-1">2025年｜植保无人机科创项目</p>
+                <div class="bg-cream p-3 mt-4 rounded-lg">
+                    <img src="奖项img/2.jpg">
+                </div>
+            </div>
+            <div class="scroll-animate slide-right bg-paper p-6 rounded-xl shadow-sm border border-softGray">
+                <h4 class="font-song font-bold text-lg text-deepGreen">首届人工智能应用创新大赛 全国特等奖</h4>
+                <p class="text-slate-600 mt-1">2025年｜大模型Agent创新应用</p>
+                <div class="bg-cream p-3 mt-4 rounded-lg">
+                    <img src="奖项img/3.jpg">
+                </div>
+            </div>
+            <div class="scroll-animate slide-left bg-paper p-6 rounded-xl shadow-sm border border-softGray">
+                <h4 class="font-song font-bold text-lg text-deepGreen">湖南省楚怡杯Python程序设计 省级三等奖</h4>
+                <p class="text-slate-600 mt-1">2025年</p>
+                <div class="bg-cream p-3 mt-4 rounded-lg">
+                    <img src="奖项img/4.jpg">
+                </div>
+            </div>
+        </div>
+
+        <!--弧形倾斜证书画廊 -->
+        <div class="arc-gallery scroll-animate fade-up">
+            <h3 class="font-song text-xl font-bold text-center mb-8 text-accentOrange">流水不争先 争的是滔滔不绝</h3>
+            <div class="arc-gallery-container">
+                <div class="cert-card landscape" style="--rotate-deg:-10deg;">
+                    <img src="外露奖状/3.jpg" alt="证书">
+                    <div class="cert-mask">优秀学生干部</div>
+                </div>
+                <div class="cert-card landscape" style="--rotate-deg:-6deg;">
+                    <img src="外露奖状/2.jpg" alt="证书">
+                    <div class="cert-mask">国家励志奖学金</div>
+                </div>
+                <div class="cert-card landscape" style="--rotate-deg:-2deg;">
+                    <img src="外露奖状/1.png" alt="证书">
+                    <div class="cert-mask">国家奖学金</div>
+                </div>
+                <div class="cert-card landscape" style="--rotate-deg:0deg;">
+                    <img src="外露奖状/8.jpg" alt="证书">
+                    <div class="cert-mask">湖南省优秀毕业生</div>
+                </div>
+                <div class="cert-card landscape" style="--rotate-deg:2deg;">
+                    <img src="外露奖状/5.jpg" alt="证书">
+                    <div class="cert-mask">2025创新创业校赛</div>
+                </div>
+                <div class="cert-card landscape" style="--rotate-deg:6deg;">
+                    <img src="外露奖状/6.jpg" alt="证书">
+                    <div class="cert-mask">2025创新创业省赛</div>
+                </div>
+                <div class="cert-card landscape" style="--rotate-deg:10deg;">
+                    <img src="外露奖状/7.jpg" alt="证书">
+                    <div class="cert-mask">技能运动会</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ✨PPT参考页面：工作之外，收集生活，旅行拼贴拍立得板块 -->
+<section id="life" class="bg-paper">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-start">
+            <div class="scroll-animate slide-left">
+                <h2 class="font-song text-4xl leading-tight">
+                    工作之外，<br>
+                    我也认真<span class="text-deepGreen">收集生活</span>。
+                </h2>
+                <p class="mt-6 text-slate-600 max-w-md">
+                    旅行、公园和摄影，是另一份等待完成的清单。它们让我慢下来，重新看见人、风景和自己；也让我一直对世界保有好奇，对生活保有感受。
+                </p>
+            </div>
+            <div class="scroll-animate slide-right grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:-2deg">
+                    <img src="生活/1.jpg">
+                </div>
+                <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:1deg">
+                    <img src="生活/2.jpg">
+                </div>
+                <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:-1.4deg">
+                    <img src="生活/3.jpg">
+                </div>
+                <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:2deg">
+                    <img src="生活/4.jpg">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 联系我 ========== -->
+<section id="contact" class="bg-cream">
+    <div class="max-w-3xl mx-auto text-center px-6">
+        <h2 class="scroll-animate fade-up font-song text-3xl font-bold mb-6 text-deepGreen">联系我</h2>
+        <p class="scroll-animate fade-up text-xl mb-8 text-slate‑700">期待沟通交流</p>
+        <div class="scroll-animate pop-scale bg-paper  p-8 rounded-xl shadow-sm border border-softGray">
+            <div class="space-y-3 text-slate-600 text-lg">
+                <p>📞电话：15573258390</p>
+                <p>📧邮箱：2294377665@qq.com</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="py-5 text-center text-slate-500 border-t border-softGray bg-paper">
+    © 2026 ｜人工智能技术应用专业个人作品集
+</footer>
+
+<!-- 滚动动画：进出视口重置 -->
+<script>
+    const animateItems = document.querySelectorAll('.scroll-animate');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(item => {
+            if (item.isIntersecting) {
+                item.target.classList.add('active');
+            } else {
+                item.target.classList.remove('active');
+            }
+        });
+    }, {
+        threshold: 0.15
+    });
+    animateItems.forEach(el => observer.observe(el));
+</script>
+
+<!-- 首页轮播逻辑 -->
+<script>
+    const slides = document.querySelectorAll('.home-slide');
+    const dots = document.querySelectorAll('.home-slider-dot');
+    const prevBtn = document.getElementById('sliderPrev');
+    const nextBtn = document.getElementById('sliderNext');
+    let currentIndex = 0;
+
+    function updateSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+        currentIndex = index;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateSlide(prevIndex);
+    });
+    nextBtn.addEventListener('click', () => {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        updateSlide(nextIndex);
+    });
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            updateSlide(Number(dot.dataset.index));
+        });
+    });
+    // 自动轮播
+    setInterval(() => {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        updateSlide(nextIndex);
+    }, 5000);
+</script>
+</body>
+</html>
