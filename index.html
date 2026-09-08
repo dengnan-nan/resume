@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1,user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人作品集｜2026届毕业生</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -29,25 +29,6 @@
         html {
             scroll-behavior: smooth;
         }
-
-        /* ========== 新增：手机竖屏横屏提示遮罩 ========== */
-        .rotate-tip{
-            position:fixed;
-            z-index:9999;
-            top:0;left:0;
-            width:100vw;height:100vh;
-            background:#000;
-            color:#fff;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            flex-direction:column;
-            font-size:18px;
-        }
-        @media (orientation:landscape){
-            .rotate-tip{display:none !important;}
-        }
-
         .nav-item {
             padding: 0.5rem 1rem;
             transition: color 0.2s;
@@ -55,11 +36,9 @@
         .nav-item:hover {
             color: #D47B59;
         }
-
         section {
             padding: 4rem 1.5rem;
         }
-
         /* ========= 滚动动画：进出视口重置效果 ========= */
         .scroll-animate {
             opacity: 0;
@@ -81,7 +60,6 @@
             opacity: 1;
             transform: translate(0, 0) scale(1);
         }
-
         /* PPT样式：拍立得照片卡片，带旋转、白边阴影 */
         .photo-card {
             box-shadow: 4px 6px 14px rgba(0,0,0,0.12);
@@ -101,7 +79,6 @@
             padding: 10px 16px;
             transform: rotate(var(--tag-rotate, -2deg));
         }
-
         /* ========= 首页窄Header + 灰色蒙版轮播 ========= */
         .home-slider {
             position: relative;
@@ -183,27 +160,17 @@
         .home-slider-dot.active {
             background-color: white;
         }
-
-        /* ✅修复项目卡片：内部向下展开，不会被遮挡 */
-        .project-card-wrap {
-            position: relative;
+        /* 项目内部滚动容器美化滚动条 */
+        .project-scroll-wrap::-webkit-scrollbar {
+            width: 6px;
         }
-        .project-card-detail {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: all 0.45s ease;
-            background-color:#fff;
-            margin-top:1rem;
+        .project-scroll-wrap::-webkit-scrollbar-thumb {
+            background-color: #D47B59;
+            border-radius: 4px;
         }
-        .project-card-wrap:hover .project-card-detail{
-            max-height:800px;
-            opacity:1;
-            border:2px solid var(--softGray,#E8E4DA);
-            border-radius:0.75rem;
-            padding:1rem;
+        .project-scroll-wrap::-webkit-scrollbar-track {
+            background: #E8E4DA;
         }
-
         /* ======================新增：弧形倾斜证书画廊样式====================== */
         .arc-gallery{
             margin-top:4rem;
@@ -262,10 +229,6 @@
     </style>
 </head>
 <body class="font-sans bg-cream text-slate-800 overflow-x-hidden">
-<!-- ========= 新增：竖屏旋转提示遮罩 ========= -->
-<div class="rotate-tip">
-    <div>🔄请将手机横向使用</div>
-</div>
 
 <!-- 顶部导航栏：PPT风格浅色导航 -->
 <header class="sticky top-0 bg-paper/90 backdrop-blur-sm shadow-sm z-50 border-b border-softGray">
@@ -405,110 +368,327 @@
     </div>
 </section>
 
-<!-- ========== 项目作品集板块（全部保留你的原有项目，换复古卡片风格） ========== -->
+<!-- ========== 项目作品集板块｜全部改为点击展开带内部滚动滑轮 ========== -->
 <section id="project" class="bg-paper">
     <div class="max-w-7xl mx-auto px-6">
         <h2 class="scroll-animate fade-up font-song text-3xl font-bold text-center mb-12 text-deepGreen">三载时光，我的创造与实践</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
 
             <!--项目1：科创商业落地｜植保无人机管控平台 -->
-            <div class="scroll-animate slide-left project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+            <div class="scroll-animate slide-left bg-cream p-5 rounded-xl shadow-sm border border-softGray">
                 <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
                     <img src="项目img/img_2.png" class="w-full h-full object-cover">
                 </div>
                 <h4 class="font-song text-xl font-bold text-deepGreen">植保无人机全链路可视化管控平台</h4>
                 <p class="text-slate-600 mt-2">科创商业落地项目｜国家级科创赛事银奖</p>
-                <p class="text-sm text-accentOrange mt-2"></p>
-                <div class="project-card-detail">
-                    <h5 class="font-bold text-deepGreen">项目简介</h5>
-                    <p class="text-sm mt-1 text-slate-600">面向规模化智慧农田作业场景，配套云端一体化数字管控后台，完成整套管控大屏UI、数据可视化、三维可视化设计；负责路演PPT全案策划，项目斩获国赛银奖，产出4项专利受理。</p>
-                    <div class="bg-cream p-3 mt-3 rounded-lg">
-                        <img src="项目img/img_1.png">
+                <div class="mt-4">
+                    <button class="project-expand-btn w-full flex justify-between items-center bg-softGray p-3 rounded-lg text-deepGreen font-bold">
+                        <span>📋 项目完整详情</span>
+                        <i class="fa fa-chevron-down transition-transform duration-300 arrow-icon"></i>
+                    </button>
+                    <div class="project-detail-box mt-3 overflow-hidden rounded-lg bg-paper border border-softGray transition-all duration-400 max-h-0 opacity-0">
+                        <div class="project-scroll-wrap p-4 md:max-h-[420px] max-h-[280px] space-y-5 text-deepGreen overflow-y-auto">
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">项目做了什么</h4>
+                                <p class="text-sm md:text-base text-deepGreen/80 leading-relaxed">
+                                    面向规模化智慧农田作业场景，配套云端一体化数字管控后台，完成整套管控大屏UI、数据可视化、三维可视化设计；负责路演PPT全案策划，项目斩获国赛银奖，产出4项专利受理，十余项软件著作权。
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">担任角色</h4>
+                                <ul class="list-disc pl-5 text-sm md:text-base text-deepGreen/80 space-y-2">
+                                    <li><strong>项目角色：</strong>可视化技术负责人，负责前端可视化模块从需求对接、方案设计到落地实现全流程工作。</li>
+                                    <li><strong>业务对接：</strong>对接团队产品、后端组员，梳理业务需求，把业务描述转化成可开发的页面交互方案，输出简单开发文档，对齐团队预期，避免后期需求反复改动。</li>
+                                    <li><strong>开发实现：</strong>独立完成页面布局搭建、组件封装、图表可视化开发；对接后端接口，处理异步数据、数据格式化，解决接口字段不一致、数据空值等边界情况。</li>
+                                    <li><strong>优化与调试：</strong>兼顾电脑与移动端响应式适配，排查页面卡顿、渲染异常问题；做交互细节打磨，提升页面稳定性与用户体验。</li>
+                                    <li><strong>项目输出：</strong>参与项目材料整理，协助完成竞赛申报材料、演示素材输出，支撑项目参赛拿奖、专利软著材料整理工作。</li>
+                                </ul>
+                                <div class="mt-3 bg-softGray/50 p-3 rounded">
+                                    <p class="text-sm text-deepGreen/80">
+                                        <strong>对应能力体现：</strong>需求拆解能力、前后端接口联调、组件化开发、响应式页面开发、团队沟通协作、问题排查调试、项目文档输出。
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">能力收获</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">数据可视化</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">接口联调</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">性能优化</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">团队协作</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">需求拆解</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">组件封装</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">响应式开发</span>
+                                </div>
+                            </div>
+                            <div class="bg-cream p-3 mt-3 rounded-lg">
+                                <img src="项目img/img_1.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!--项目2：职点迷津｜大模型Agent应用 -->
-            <div class="scroll-animate pop-scale project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+            <div class="scroll-animate pop-scale bg-cream p-5 rounded-xl shadow-sm border border-softGray">
                 <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
                     <img src="项目img/img_3.png" class="w-full h-full object-cover">
                 </div>
                 <h4 class="font-song text-xl font-bold text-deepGreen">职点迷津 AI大模型Agent创新应用</h4>
                 <p class="text-slate-600 mt-2">AI智能职业服务平台</p>
-                <p class="text-sm text-accentOrange mt-2"></p>
-                <div class="project-card-detail">
-                    <h5 class="font-bold text-deepGreen">项目简介</h5>
-                    <p class="text-sm mt-1 text-slate-600">后端Python+Django，接入大模型API实现Agent对话，实现职业规划、简历优化；独立完成前端视觉交互，参与后端对接，完成UI设计到AI交互落地全流程。</p>
-                    <div class="bg-cream p-3 mt-3 rounded-lg">
-                        <img src="项目img/img_4.png">
+                <div class="mt-4">
+                    <button class="project-expand-btn w-full flex justify-between items-center bg-softGray p-3 rounded-lg text-deepGreen font-bold">
+                        <span>📋 项目完整详情</span>
+                        <i class="fa fa-chevron-down transition-transform duration-300 arrow-icon"></i>
+                    </button>
+                    <div class="project-detail-box mt-3 overflow-hidden rounded-lg bg-paper border border-softGray transition-all duration-400 max-h-0 opacity-0">
+                        <div class="project-scroll-wrap p-4 md:max-h-[420px] max-h-[280px] space-y-5 text-deepGreen overflow-y-auto">
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">项目做了什么</h4>
+                                <p class="text-sm md:text-base text-deepGreen/80 leading-relaxed">
+                                    AI智能职业服务平台，后端Python+Django，接入大模型API实现Agent对话，实现职业规划、简历优化、岗位推荐功能；面向求职学生群体，提供AI辅助求职全流程服务。
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">担任角色</h4>
+                                <ul class="list-disc pl-5 text-sm md:text-base text-deepGreen/80 space-y-2">
+                                    <li><strong>项目角色：</strong>前端开发，同时参与部分后端业务逻辑调试。</li>
+                                    <li><strong>业务对接：</strong>和后端同学对齐Agent交互逻辑，梳理求职场景业务流程，定义页面交互逻辑。</li>
+                                    <li><strong>开发实现：</strong>独立完成前端页面搭建、表单组件、对话聊天界面开发；对接大模型接口，处理流式返回内容，完成页面状态管理。</li>
+                                    <li><strong>优化与调试：</strong>完成多端适配，处理接口异常、加载状态、空状态等边界交互。</li>
+                                    <li><strong>项目输出：</strong>输出原型页面，参与项目演示材料整理，支撑项目参赛。</li>
+                                </ul>
+                                <div class="mt-3 bg-softGray/50 p-3 rounded">
+                                    <p class="text-sm text-deepGreen/80">
+                                        <strong>对应能力体现：</strong>大模型API对接、Django基础开发、前端组件开发、状态处理、前后端联调、需求梳理。
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">能力收获</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">大模型应用开发</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">Django</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">接口联调</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">表单开发</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">团队协作</span>
+                                </div>
+                            </div>
+                            <div class="bg-cream p-3 mt-3 rounded-lg">
+                                <img src="项目img/img_4.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!--项目3：ResNet人脸情绪识别 -->
-            <div class="scroll-animate slide-right project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+            <div class="scroll-animate slide-right bg-cream p-5 rounded-xl shadow-sm border border-softGray">
                 <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
                     <img src="项目img/img_5.png" class="w-full h-full object-cover">
                 </div>
                 <h4 class="font-song text-xl font-bold text-deepGreen">ResNet人脸情绪识别系统</h4>
                 <p class="text-slate-600 mt-2">深度学习七分类项目</p>
-                <p class="text-sm text-accentOrange mt-2"></p>
-                <div class="project-card-detail">
-                    <h5 class="font-bold text-deepGreen">项目简介</h5>
-                    <p class="text-sm mt-1 text-slate-600">Pytorch搭建ResNet卷积神经网络，实现视频流人脸情绪七分类；完成数据集处理、模型训练、评估指标可视化、演示界面开发。</p>
-                    <div class="bg-cream p-3 mt-3 rounded-lg">
-                        <img src="项目img/img_6.png">
+                <div class="mt-4">
+                    <button class="project-expand-btn w-full flex justify-between items-center bg-softGray p-3 rounded-lg text-deepGreen font-bold">
+                        <span>📋 项目完整详情</span>
+                        <i class="fa fa-chevron-down transition-transform duration-300 arrow-icon"></i>
+                    </button>
+                    <div class="project-detail-box mt-3 overflow-hidden rounded-lg bg-paper border border-softGray transition-all duration-400 max-h-0 opacity-0">
+                        <div class="project-scroll-wrap p-4 md:max-h-[420px] max-h-[280px] space-y-5 text-deepGreen overflow-y-auto">
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">项目做了什么</h4>
+                                <p class="text-sm md:text-base text-deepGreen/80 leading-relaxed">
+                                    Pytorch搭建ResNet卷积神经网络，实现视频流人脸情绪七分类；完成数据集处理、模型训练、评估指标可视化、演示界面开发，可以实时识别视频画面中人的情绪状态。
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">担任角色</h4>
+                                <ul class="list-disc pl-5 text-sm md:text-base text-deepGreen/80 space-y-2">
+                                    <li><strong>项目角色：</strong>算法开发，独立完成整套模型训练与演示程序开发。</li>
+                                    <li><strong>业务对接：</strong>调研人脸情绪公开数据集，确定七分类标签体系，设计训练流程。</li>
+                                    <li><strong>开发实现：</strong>数据集清洗增强，搭建ResNet网络，调参训练，绘制混淆矩阵、loss曲线评估模型；编写OpenCV视频流推理演示程序。</li>
+                                    <li><strong>优化与调试：</strong>调整数据增强策略，优化推理速度，解决人脸检测漏检问题。</li>
+                                    <li><strong>项目输出：</strong>完整训练代码、权重文件、实验报告、演示脚本。</li>
+                                </ul>
+                                <div class="mt-3 bg-softGray/50 p-3 rounded">
+                                    <p class="text-sm text-deepGreen/80">
+                                        <strong>对应能力体现：</strong>Pytorch深度学习、图像分类、数据集处理、模型调优、OpenCV视频处理、实验指标分析。
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">能力收获</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">深度学习</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">ResNet</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">OpenCV</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">数据集处理</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">模型调参</span>
+                                </div>
+                            </div>
+                            <div class="bg-cream p-3 mt-3 rounded-lg">
+                                <img src="项目img/img_6.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!--项目4：房价爬虫可视化 -->
-            <div class="scroll-animate slide-left project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+            <div class="scroll-animate slide-left bg-cream p-5 rounded-xl shadow-sm border border-softGray">
                 <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
                     <img src="项目img/img_8.png" class="w-full h-full object-cover">
                 </div>
                 <h4 class="font-song text-xl font-bold text-deepGreen">全国房价数据采集与可视化</h4>
                 <p class="text-slate-600 mt-2">Python爬虫+MySQL数据分析项目</p>
-                <p class="text-sm text-accentOrange mt-2"></p>
-                <div class="project-card-detail">
-                    <h5 class="font-bold text-deepGreen">项目简介</h5>
-                    <p class="text-sm mt-1 text-slate-600">爬虫抓取多城市房价时序数据，入库MySQL，完成数据清洗，制作地图、折线、玫瑰图多维度可视化，完成采集‑存储‑处理‑展示闭环。</p>
-                    <div class="bg-cream p-3 mt-3 rounded-lg">
-                        <img src="项目img/img_7.png">
+                <div class="mt-4">
+                    <button class="project-expand-btn w-full flex justify-between items-center bg-softGray p-3 rounded-lg text-deepGreen font-bold">
+                        <span>📋 项目完整详情</span>
+                        <i class="fa fa-chevron-down transition-transform duration-300 arrow-icon"></i>
+                    </button>
+                    <div class="project-detail-box mt-3 overflow-hidden rounded-lg bg-paper border border-softGray transition-all duration-400 max-h-0 opacity-0">
+                        <div class="project-scroll-wrap p-4 md:max-h-[420px] max-h-[280px] space-y-5 text-deepGreen overflow-y-auto">
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">项目做了什么</h4>
+                                <p class="text-sm md:text-base text-deepGreen/80 leading-relaxed">
+                                    爬虫抓取多城市房价时序数据，入库MySQL，完成数据清洗，制作地图、折线、玫瑰图多维度可视化，完成采集‑存储‑处理‑展示完整数据闭环。
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">担任角色</h4>
+                                <ul class="list-disc pl-5 text-sm md:text-base text-deepGreen/80 space-y-2">
+                                    <li><strong>项目角色：</strong>独立完成全流程开发。</li>
+                                    <li><strong>业务对接：</strong>确定采集目标站点，设计数据表结构，规划统计分析维度。</li>
+                                    <li><strong>开发实现：</strong>编写爬虫脚本，设置请求策略，数据存入MySQL；Pandas完成清洗、去重、缺失值处理；使用可视化库完成多图表绘制。</li>
+                                    <li><strong>优化与调试：</strong>增加异常捕获，处理反爬，数据校验，保证数据质量。</li>
+                                    <li><strong>项目输出：</strong>爬虫脚本、数据库表、清洗脚本、可视化图表、分析报告。</li>
+                                </ul>
+                                <div class="mt-3 bg-softGray/50 p-3 rounded">
+                                    <p class="text-sm text-deepGreen/80">
+                                        <strong>对应能力体现：</strong>Python爬虫、MySQL数据库、Pandas数据清洗、数据分析、多维度可视化。
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">能力收获</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">网络爬虫</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">MySQL</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">Pandas</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">数据清洗</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">数据分析</span>
+                                </div>
+                            </div>
+                            <div class="bg-cream p-3 mt-3 rounded-lg">
+                                <img src="项目img/img_7.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!--项目5：SVM黑色星期五消费预测 -->
-            <div class="scroll-animate pop-scale project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+            <div class="scroll-animate pop-scale bg-cream p-5 rounded-xl shadow-sm border border-softGray">
                 <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
                     <img src="项目img/img_11.png" class="w-full h-full object-cover">
                 </div>
                 <h4 class="font-song text-xl font-bold text-deepGreen">SVM黑色星期五用户消费预测</h4>
                 <p class="text-slate-600 mt-2">机器学习多模型对比实验</p>
-                <p class="text-sm text-accentOrange mt-2"></p>
-                <div class="project-card-detail">
-                    <h5 class="font-bold text-deepGreen">项目简介</h5>
-                    <p class="text-sm mt-1 text-slate-600">基于Scikit‑learn，完成数据集清洗特征工程，对比多组核函数SVM模型，评估模型R2指标，产出完整分析报告。</p>
-                    <div class="bg-cream p-3 mt-3 rounded-lg">
-                        <img src="项目img/img_10.png">
+                <div class="mt-4">
+                    <button class="project-expand-btn w-full flex justify-between items-center bg-softGray p-3 rounded-lg text-deepGreen font-bold">
+                        <span>📋 项目完整详情</span>
+                        <i class="fa fa-chevron-down transition-transform duration-300 arrow-icon"></i>
+                    </button>
+                    <div class="project-detail-box mt-3 overflow-hidden rounded-lg bg-paper border border-softGray transition-all duration-400 max-h-0 opacity-0">
+                        <div class="project-scroll-wrap p-4 md:max-h-[420px] max-h-[280px] space-y-5 text-deepGreen overflow-y-auto">
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">项目做了什么</h4>
+                                <p class="text-sm md:text-base text-deepGreen/80 leading-relaxed">
+                                    基于Scikit‑learn，完成数据集清洗特征工程，对比多组核函数SVM模型，评估模型R²指标，产出完整数据分析报告，实现用户消费金额预测。
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">担任角色</h4>
+                                <ul class="list-disc pl-5 text-sm md:text-base text-deepGreen/80 space-y-2">
+                                    <li><strong>项目角色：</strong>独立完成机器学习全流程实验。</li>
+                                    <li><strong>业务对接：</strong>理解电商消费数据集业务含义，确定预测目标变量。</li>
+                                    <li><strong>开发实现：</strong>数据清洗、类别特征编码、特征筛选、数据集划分；搭建SVM多组核函数模型训练对比；计算评估指标，绘制对比图表。</li>
+                                    <li><strong>优化与调试：</strong>做特征缩放、超参数调优，对比不同模型效果。</li>
+                                    <li><strong>项目输出：</strong>完整实验代码、指标图表、分析报告文档。</li>
+                                </ul>
+                                <div class="mt-3 bg-softGray/50 p-3 rounded">
+                                    <p class="text-sm text-deepGreen/80">
+                                        <strong>对应能力体现：</strong>Scikit‑learn机器学习、特征工程、SVM算法、模型评估对比、数据分析报告输出。
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">能力收获</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">机器学习</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">SVM</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">特征工程</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">模型评估</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">实验分析</span>
+                                </div>
+                            </div>
+                            <div class="bg-cream p-3 mt-3 rounded-lg">
+                                <img src="项目img/img_10.png">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!--项目6：人工智能之智慧语音｜博物馆数字人讲解 -->
-            <div class="scroll-animate slide-right project-card-wrap bg-cream p-5 rounded-xl shadow-sm border border-softGray">
+            <div class="scroll-animate slide-right bg-cream p-5 rounded-xl shadow-sm border border-softGray">
                 <div class="h-48 bg-slate-100 rounded flex items-center justify-center mb-3 overflow-hidden">
                     <img src="项目img/img_12.png" alt="智慧语音博物馆数字人" class="w-full h-full object-cover">
                 </div>
-                <h4 class="font-song text-xl font-bold text-deepGreen">人工智能之智慧语音｜博物馆数字人讲解</h4>
+                <h4 class="font-song text-xl font-bold text-deepGreen">人工智能之智慧语音｜博物馆数字人</h4>
                 <p class="text-slate-600 mt-2">AI智慧语音交互｜文博科普落地应用</p>
-                <p class="text-sm text-accentOrange mt-2"></p>
-                <div class="project-card-detail">
-                    <h5 class="font-bold text-deepGreen">项目简介</h5>
-                    <p class="text-sm mt-1 text-slate-600">聚焦人工智能在社会文博领域的实际应用，设计博物馆数字人讲解演示方案。制作《历史的声音》主题演示PPT，结合智慧语音技术，实现数字人对历史文物、古代历史故事进行科普解说，让博物馆展品“开口说话”，赋能传统文化数字化传播。</p>
-                    <div class="bg-cream p-3 mt-3 rounded-lg">
-                        <img src="项目img/13.jpg">
+                <div class="mt-4">
+                    <button class="project-expand-btn w-full flex justify-between items-center bg-softGray p-3 rounded-lg text-deepGreen font-bold">
+                        <span>📋 项目完整详情</span>
+                        <i class="fa fa-chevron-down transition-transform duration-300 arrow-icon"></i>
+                    </button>
+                    <div class="project-detail-box mt-3 overflow-hidden rounded-lg bg-paper border border-softGray transition-all duration-400 max-h-0 opacity-0">
+                        <div class="project-scroll-wrap p-4 md:max-h-[420px] max-h-[280px] space-y-5 text-deepGreen overflow-y-auto">
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">项目做了什么</h4>
+                                <p class="text-sm md:text-base text-deepGreen/80 leading-relaxed">
+                                    聚焦人工智能在社会文博领域的实际应用，设计博物馆数字人讲解演示方案。制作《历史的声音》主题演示PPT，结合智慧语音技术，实现数字人对历史文物、古代历史故事进行科普解说，让博物馆展品“开口说话”，赋能传统文化数字化传播。
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">担任角色</h4>
+                                <ul class="list-disc pl-5 text-sm md:text-base text-deepGreen/80 space-y-2">
+                                    <li><strong>项目角色：</strong>方案设计与演示开发负责人。</li>
+                                    <li><strong>业务对接：</strong>调研文博数字化场景需求，梳理文物科普知识体系，确定数字人交互业务流程。</li>
+                                    <li><strong>开发实现：</strong>完成数字人演示方案设计，对接语音合成接口，整理讲解文案素材，完成演示PPT与交互原型制作。</li>
+                                    <li><strong>优化与调试：</strong>调整语音音色、停顿节奏，优化讲解文案，提升科普内容可读性。</li>
+                                    <li><strong>项目输出：</strong>完整演示方案、主题PPT、讲解素材包、演示原型。</li>
+                                </ul>
+                                <div class="mt-3 bg-softGray/50 p-3 rounded">
+                                    <p class="text-sm text-deepGreen/80">
+                                        <strong>对应能力体现：</strong>场景需求调研、AI语音接口使用、方案策划、演示材料制作、内容梳理。
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-[clamp(1rem,2vw,1.2rem)] font-bold border-l-4 border-accentOrange pl-3 mb-2">能力收获</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">AI语音应用</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">方案设计</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">需求调研</span>
+                                    <span class="bg-softGray px-3 py-1 rounded text-sm">演示文档制作</span>
+                                </div>
+                            </div>
+                            <div class="bg-cream p-3 mt-3 rounded-lg">
+                                <img src="项目img/13.jpg">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -602,7 +782,8 @@
                 </p>
             </div>
             <div class="scroll-animate slide-right grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:-2deg">
+                <div class="photo-card aspect-[3/4] bg-slate-20
+                                <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:-2deg">
                     <img src="生活/1.jpg">
                 </div>
                 <div class="photo-card aspect-[3/4] bg-slate-200" style="--rotate:1deg">
@@ -623,8 +804,8 @@
 <section id="contact" class="bg-cream">
     <div class="max-w-3xl mx-auto text-center px-6">
         <h2 class="scroll-animate fade-up font-song text-3xl font-bold mb-6 text-deepGreen">联系我</h2>
-        <p class="scroll-animate fade-up text-xl mb-8 text-slate‑700">期待沟通交流</p>
-        <div class="scroll-animate pop-scale bg-paper  p-8 rounded-xl shadow-sm border border-softGray">
+        <p class="scroll-animate fade-up text-xl mb-8 text-slate-700">期待沟通交流</p>
+        <div class="scroll-animate pop-scale bg-paper p-8 rounded-xl shadow-sm border border-softGray">
             <div class="space-y-3 text-slate-600 text-lg">
                 <p>📞电话：15573258390</p>
                 <p>📧邮箱：2294377665@qq.com</p>
@@ -651,6 +832,7 @@
     }, {
         threshold: 0.15
     });
+
     animateItems.forEach(el => observer.observe(el));
 </script>
 
@@ -676,36 +858,55 @@
         const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
         updateSlide(prevIndex);
     });
+
     nextBtn.addEventListener('click', () => {
         const nextIndex = (currentIndex + 1) % slides.length;
         updateSlide(nextIndex);
     });
+
     dots.forEach(dot => {
         dot.addEventListener('click', () => {
             updateSlide(Number(dot.dataset.index));
         });
     });
-    // 自动轮播
+
     setInterval(() => {
         const nextIndex = (currentIndex + 1) % slides.length;
         updateSlide(nextIndex);
     }, 5000);
 </script>
 
-<!-- ========= 横屏检测JS逻辑 ========= -->
+<!-- 项目卡片点击展开收起 + 内部滚动逻辑 -->
 <script>
-function checkOrient(){
-    const tip = document.querySelector('.rotate-tip');
-    const isLandscape = window.innerWidth > window.innerHeight;
-    if(isLandscape){
-        tip.style.display = 'none';
-    }else{
-        tip.style.display = 'flex';
-    }
-}
-window.addEventListener('resize',checkOrient);
-window.addEventListener('load',checkOrient);
+    const expandBtns = document.querySelectorAll('.project-expand-btn');
+
+    expandBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const detailBox = btn.nextElementSibling;
+            const arrowIcon = btn.querySelector('.arrow-icon');
+
+            const isOpen = detailBox.classList.contains('opacity-100');
+
+            // 先关闭所有已打开的卡片
+            document.querySelectorAll('.project-detail-box').forEach(box => {
+                box.classList.add('max-h-0', 'opacity-0');
+                box.classList.remove('max-h-[800px]', 'opacity-100');
+            });
+
+            document.querySelectorAll('.project-expand-btn .arrow-icon').forEach(icon => {
+                icon.classList.remove('rotate-180');
+            });
+
+            // 如果当前卡片原本是关闭的，就打开它
+            if (!isOpen) {
+                detailBox.classList.remove('max-h-0', 'opacity-0');
+                detailBox.classList.add('max-h-[800px]', 'opacity-100');
+                arrowIcon.classList.add('rotate-180');
+            }
+        });
+    });
 </script>
 
 </body>
 </html>
+
